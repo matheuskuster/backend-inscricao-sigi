@@ -1,0 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const SubscriptionController = require('./controllers/SubscriptionController');
+
+router.get('/show/:cnpj', SubscriptionController.showSchool);
+
+router.post('/school/store', SubscriptionController.createSchool);
+
+router.post('/school/:cnpj/teacher', SubscriptionController.createAndSetTeacher);
+
+router.post('/sheet', SubscriptionController.createSheet);
+
+module.exports = router;
+
