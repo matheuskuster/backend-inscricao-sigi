@@ -13,6 +13,7 @@ const School = new mongoose.Schema({
         type: Number,
         required: true
     },
+    paths: [ {type: String} ],
     teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' }
 }, {
     timestamps: true

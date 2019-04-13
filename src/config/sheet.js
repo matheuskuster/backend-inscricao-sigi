@@ -4,7 +4,7 @@ const dateFormat = require('dateformat');
 
 class Sheet {
 
-    createSheet(school, teacher, students) {
+    async createSheet(school, teacher, students) {
 
         const workbook = new excel.Workbook();
 
@@ -85,8 +85,10 @@ class Sheet {
         
         }
 
-        const pathToWrite = `${path.resolve(__dirname, '..', '..', 'tmp', 'sheets')}/${school.cnpj}-${school.name}.xlsx`
+        const pathToWrite = path.resolve(__dirname, '..', '..', 'tmp', 'sheets', `${school.cnpj}-${school.name}.xls`);
         workbook.write(pathToWrite);
+
+        return pathToWrite;
 
     }
 
