@@ -14,7 +14,7 @@ router.post('/sheet', SubscriptionController.createSheet);
 
 router.post('/term/:cnpj', multer(multerConfig).single('term'), SubscriptionController.uploadTerm);
 
-router.post('/email/:cnpj', SubscriptionController.notificationToEmail);
+router.get('/email/:cnpj', SubscriptionController.notificationToEmail);
 
 module.exports = router;
 

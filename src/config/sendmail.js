@@ -1,14 +1,28 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
+const fs = require('fs');
+const handlebars = require('handlebars');
 
 class mailController {
 
-    sendMail(school, teacher, sigiEmail, paths) {
+    async sendMail(school, teacher, sigiEmail, paths) {
+
+        const pathToView = path.resolve(__dirname, '..', 'views', 'email.html');
+        const html = fs.readFileSync(pathToView,'utf8');
+
+        const template = handlebars.compile(html);
+        const replacements = {
+            teacher_name: teacher.name,
+            school_name: school.name
+        }
+        const htmlToSend = template(replacements);
 
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
               user: 'sigi.inscricao@gmail.com',
-              pass: 'inscricao.sigi1742'
+              pass: process.env.EMAIL_PASSWORD
+              
             }
         });
 
@@ -16,13 +30,11 @@ class mailController {
             from: 'sigi.inscricao@gmail.com',
             to: [teacher.email, sigiEmail, 'sigi.inscricao@gmail.com'],
             subject: `Confirmação de inscrição na SiGI`,
-            text: `${teacher.name}, a inscrição da instituição ${school.name} na SiGI foi confirmada!\n
-                Muito obrigado, sua participação conta muito para nós!\n Segue em anexo a planilha de inscrição e seu termo de compromisso.\n\n
-                Att.\nEquipe de inscrição da SiGI.\nEste é um e-mail automático. Não responda-o.`,
+            html: htmlToSend,
             attachments: [
                {
                 name: `${school.name} INSCRICAO.xls`,
-                content: paths[0]
+                path: paths[0]
                },
                {
                 name: `${school.name} TERMO DE COMPROMISSO`,
@@ -33,10 +45,10 @@ class mailController {
 
         transporter.sendMail(options, (error, info) =>{
             if(error) {
-                console.log('E-mail não enviado.')
+                //console.log('E-mail não enviado.')
                 throw error;
             } else {
-                console.log('E-mail enviado');
+                //console.log('E-mail enviado');
             }
         });
 

@@ -2,7 +2,6 @@ const School = require('../models/School');
 const Teacher = require('../models/Teacher');
 const Sheet = require('../config/sheet');
 const mailController = require('../config/sendmail');
-const fs = require('fs');
 
 class SubscriptionController {
 
@@ -46,27 +45,34 @@ class SubscriptionController {
         const students = req.body.students;
 
         const sheetPath = await Sheet.createSheet(school, teacher, students);
-        school.paths.push(sheetPath);
-        await school.save();
-        //await mailController.sendMail(school, teacher, '', sheetPath);
+        if (school.paths.length <= 2) {
+            school.paths.push(sheetPath);
+            await school.save();
+            return res.json({ "status": "Sheet created" });
+        }
 
-        return res.json({ "status": "Sheet created and sent to e-mails" });
+        return res.json({ "status": "Sheet not created" });
     }
 
     async uploadTerm(req, res) {
         const school = await School.findOne({ cnpj: req.params.cnpj });
 
-        school.paths.push(req.file.path);
-        await school.save();
-
-        return res.json({ 'status': 'File uploaded' });
+        if (school.paths.length <= 2) {
+            school.paths.push(req.file.path);
+            await school.save();
+            return res.json({ 'status': 'File uploaded' });
+        }
+        
+        return res.json({ 'status': 'File not uploaded' });
+        
     }
 
     async notificationToEmail(req, res) {
-        const school = await School.findOne({ cnpj: req.params.cnpj });
+        const school = await School.findOne({ cnpj: req.params.cnpj }).populate('teacher');
         const teacher = school.teacher;
 
-        mailController.sendMail(school, teacher, 'organizacaosigi@gmail.com', school.paths);
+        await mailController.sendMail(school, teacher, process.env.SIGI_EMAIL, school.paths);
+        return res.json({ "status": "E-mail enviado" });
 
     }
 
