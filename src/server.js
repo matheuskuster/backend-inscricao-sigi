@@ -1,13 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const routes = require('./routes');
-const cors = require('cors');
+const express = require("express");
+const mongoose = require("mongoose");
+const routes = require("./routes");
+const cors = require("cors");
 
-mongoose.connect(`mongodb+srv://sigi:${process.env.MONGO_PASSWORD}@cluster0-cdj1t.mongodb.net/inscricao_sigi?retryWrites=true`, {
+mongoose.connect(
+  `mongodb+srv://sigi:${
+    process.env.MONGO_PASSWORD
+  }@cluster0-cdj1t.mongodb.net/inscricao_sigi?retryWrites=true`,
+  {
     useNewUrlParser: true
-})
+  }
+);
 
-const app = express()
+const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
