@@ -123,6 +123,10 @@ class Sheet {
       .cell(initialLine, 5)
       .string("SÉRIE")
       .style(titleStyle);
+    worksheet
+      .cell(initialLine, 6)
+      .string("NECESSIDADES")
+      .style(titleStyle);
 
     // Insere informacoes escola
     const now = new Date();
@@ -169,6 +173,11 @@ class Sheet {
       worksheet
         .cell(actualLine, 5)
         .string(actualStudent.year)
+        .style(defaultStyle);
+
+      worksheet
+        .cell(actualLine, 6)
+        .string(actualStudent.necessity)
         .style(defaultStyle);
     }
 

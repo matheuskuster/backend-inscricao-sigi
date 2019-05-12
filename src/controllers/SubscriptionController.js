@@ -87,6 +87,7 @@ class SubscriptionController {
       process.env.SIGI_EMAIL,
       school.paths
     );
+
     return res.json({ status: "E-mail enviado" });
   }
 }
