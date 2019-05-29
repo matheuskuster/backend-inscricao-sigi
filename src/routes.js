@@ -1,20 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const SubscriptionController = require('./controllers/SubscriptionController');
-const multer = require('multer');
-const multerConfig = require('./config/multer');   
+const SubscriptionController = require("./controllers/SubscriptionController");
+const multer = require("multer");
+const multerConfig = require("./config/multer");
 
-router.get('/show/:cnpj', SubscriptionController.showSchool);
+router.get("/show/:cnpj", SubscriptionController.showSchool);
 
-router.post('/school/store', SubscriptionController.createSchool);
+router.post(
+  "/term/:cnpj",
+  multer(multerConfig).single("term"),
+  SubscriptionController.uploadTerm
+);
 
-router.post('/school/:cnpj/teacher', SubscriptionController.createAndSetTeacher);
-
-router.post('/sheet', SubscriptionController.createSheet);
-
-router.post('/term/:cnpj', multer(multerConfig).single('term'), SubscriptionController.uploadTerm);
-
-router.get('/email/:cnpj', SubscriptionController.notificationToEmail);
+router.post("/subscription", SubscriptionController.handleSubscription);
 
 module.exports = router;
-
