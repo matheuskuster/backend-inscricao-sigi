@@ -10,10 +10,11 @@ const School = new mongoose.Schema(
       type: String,
       required: true
     },
-    students: {
+    studentsNumber: {
       type: Number,
       required: true
     },
+    students: [{ type: mongoose.Schema.Types.ObjectId, ref: "Student" }],
     paths: [{ type: String }],
     teacher: [{ type: mongoose.Schema.Types.ObjectId, ref: "Teacher" }]
   },

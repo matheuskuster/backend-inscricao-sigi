@@ -174,7 +174,6 @@ class Sheet {
         .cell(actualLine, 5)
         .string(actualStudent.year)
         .style(defaultStyle);
-
       worksheet
         .cell(actualLine, 6)
         .string(actualStudent.necessity)

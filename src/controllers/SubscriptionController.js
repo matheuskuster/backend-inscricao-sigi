@@ -1,5 +1,6 @@
 const School = require("../models/School");
 const Teacher = require("../models/Teacher");
+const Student = require("../models/Student");
 const Sheet = require("../config/sheet");
 const mailController = require("../config/sendmail");
 
@@ -9,7 +10,7 @@ class SubscriptionController {
     const school = await School.create({
       name: req.body.name,
       cnpj: req.body.cnpj,
-      students: req.body.studentsNumber
+      studentsNumber: req.body.studentsNumber
     });
 
     return res.json(school);
@@ -52,6 +53,21 @@ class SubscriptionController {
     );
     const teacher = school.teacher;
     const students = req.body.students;
+
+    students.map(actualStudent, async () => {
+      const newStudent = await Student.create({
+        name: actualStudent.name,
+        cpf: actualStudent.cpf,
+        email: actualStudent.email,
+        cellphone: actualStudent.cellphone,
+        class: actualStudent.year,
+        necessity: actualStudent.necessity
+      });
+
+      school.students.push(newStudent);
+    });
+
+    await school.save();
 
     const sheetPath = await Sheet.createSheet(school, teacher, students);
     if (school.paths.length < 2) {
