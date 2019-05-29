@@ -19,7 +19,7 @@ class mailController {
       service: "Gmail",
       auth: {
         user: "sigi.inscricao@gmail.com",
-        pass: process.env.EMAIL_PASSWORD || "inscricao.sigi1742"
+        pass: process.env.EMAIL_PASSWORD
       }
     });
 

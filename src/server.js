@@ -4,8 +4,9 @@ const routes = require("./routes");
 const cors = require("cors");
 
 mongoose.connect(
-  `mongodb+srv://sigi:${process.env.MONGO_PASSWORD ||
-    "uSVRsiQF5u9fXaQy"}@cluster0-cdj1t.mongodb.net/inscricao_sigi?retryWrites=true`,
+  `mongodb+srv://sigi:${
+    process.env.MONGO_PASSWORD
+  }@cluster0-cdj1t.mongodb.net/inscricao_sigi?retryWrites=true`,
   {
     useNewUrlParser: true
   }
