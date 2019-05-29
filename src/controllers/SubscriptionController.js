@@ -34,15 +34,6 @@ class SubscriptionController {
     }
   }
 
-  async notificationToEmail(req, res) {
-    const school = await School.findOne({ cnpj: req.params.cnpj }).populate(
-      "teacher"
-    );
-    const teacher = school.teacher;
-
-    return res.json({ status: "E-mail enviado" });
-  }
-
   async handleSubscription(req, res) {
     try {
       const { school, teachers, students } = req.body;
