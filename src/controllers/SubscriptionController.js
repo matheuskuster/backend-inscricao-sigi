@@ -54,18 +54,18 @@ class SubscriptionController {
     const teacher = school.teacher;
     const students = req.body.students;
 
-    students.map(actualStudent, async () => {
+    for (var i = 0; i < students.length; i++) {
       const newStudent = await Student.create({
-        name: actualStudent.name,
-        cpf: actualStudent.cpf,
-        email: actualStudent.email,
-        cellphone: actualStudent.cellphone,
-        class: actualStudent.year,
-        necessity: actualStudent.necessity
+        name: students[i].name,
+        cpf: students[i].cpf,
+        email: students[i].email,
+        cellphone: students[i].cellphone,
+        class: students[i].year,
+        necessity: students[i].necessity
       });
 
       school.students.push(newStudent);
-    });
+    }
 
     await school.save();
 
@@ -100,7 +100,7 @@ class SubscriptionController {
     await mailController.sendMail(
       school,
       teacher,
-      process.env.SIGI_EMAIL,
+      process.env.SIGI_EMAIL || "matheuskuster@hotmail.com",
       school.paths
     );
 
