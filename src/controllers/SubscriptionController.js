@@ -30,6 +30,7 @@ class SubscriptionController {
 
       return res.status(200).json({ status: "File uploaded and e-mail sent" });
     } catch (err) {
+      console.log(err);
       return res.status(500).json({ status: "File not uploaded" });
     }
   }
