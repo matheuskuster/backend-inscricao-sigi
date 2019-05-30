@@ -15,7 +15,11 @@ class SubscriptionController {
   }
 
   async uploadTerm(req, res) {
-    const school = await School.findOne({ cnpj: req.params.cnpj });
+    const school = await School.findOne({ cnpj: req.params.cnpj }).populate(
+      "teacher"
+    );
+
+    const teacher = school.teacher;
 
     try {
       school.paths.push(req.file.path);
