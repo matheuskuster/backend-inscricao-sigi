@@ -5,6 +5,12 @@ const Sheet = require("../config/sheet");
 const mailController = require("../config/sendmail");
 
 class SubscriptionController {
+  async show(req, res) {
+    const schools = await School.find();
+
+    return res.json(schools);
+  }
+
   async showSchool(req, res) {
     const school = await School.findOne({ cnpj: req.params.cnpj }).populate([
       "teacher",
@@ -12,6 +18,26 @@ class SubscriptionController {
     ]);
 
     return res.json(school);
+  }
+
+  async createSheet(req, res) {
+    const school = await School.findOne({ cnpj: req.params.cnpj }).populate([
+      "teacher",
+      "students"
+    ]);
+
+    Sheet.createSheet(school, school.teacher, school.students).then(
+      async sheetPath => {
+        mailController.sendMail(
+          school,
+          school.teacher,
+          process.env.SIGI_EMAIL || "matheuskuster@hotmail.com",
+          [sheetPath]
+        );
+
+        return res.json(sheetPath);
+      }
+    );
   }
 
   async uploadTerm(req, res) {

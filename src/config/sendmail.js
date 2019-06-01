@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const fs = require("fs");
 const handlebars = require("handlebars");
+const mg = require("nodemailer-mailgun-transport");
 
 class mailController {
   async sendMail(school, teacher, sigiEmail, paths) {
@@ -14,41 +15,53 @@ class mailController {
         teacher_name: teacher[0].name,
         school_name: school.name
       };
+
       const htmlToSend = template(replacements);
 
-      const transporter = nodemailer.createTransport({
-        service: "Gmail",
+      const auth = {
         auth: {
-          user: "sigi.inscricao@gmail.com",
-          pass: process.env.EMAIL_PASSWORD
+          api_key: process.env.MAILGUN_APIKEY,
+          domain: process.env.MAILGUN_DOMAIN
         }
-      });
-
-      const options = {
-        from: "sigi.inscricao@gmail.com",
-        to: [teacher[0].email, sigiEmail, "sigi.inscricao@gmail.com"],
-        subject: `Confirmação de inscrição na SiGI`,
-        html: htmlToSend,
-        attachments: [
-          {
-            name: `${school.name} INSCRICAO.xls`,
-            path: paths[0]
-          },
-          {
-            name: `${school.name} TERMO DE COMPROMISSO`,
-            path: paths[1]
-          }
-        ]
       };
 
-      transporter.sendMail(options, (error, info) => {
-        if (error) {
-          //console.log('E-mail não enviado.')
-          throw error;
-        } else {
-          //console.log('E-mail enviado');
-        }
+      const nodemailerMailgun = nodemailer.createTransport(mg(auth));
+      const attachments = [];
+
+      attachments.push({
+        filename: `${school.name} INSCRICAO.xls`,
+        path: paths[0]
       });
+
+      if (paths.length == 2) {
+        attachments.push({
+          filename: `${school.name} TERMO DE COMPROMISSO.${path.extname(
+            paths[1]
+          )}`,
+          path: paths[1]
+        });
+      }
+
+      nodemailerMailgun.sendMail(
+        {
+          from: "sigi.inscricao@gmail.com",
+          to: [
+            "sigi.inscricao@gmail.com",
+            "matheuskuster@hotmail.com",
+            sigiEmail
+          ],
+          subject: "Confirmação de inscrição na VII SiGI",
+          html: htmlToSend,
+          attachments: attachments
+        },
+        function(err, info) {
+          if (err) {
+            console.log("Error: " + err);
+          } else {
+            console.log("Response: " + info);
+          }
+        }
+      );
     } catch (err) {
       console.log(err);
       throw err;

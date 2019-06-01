@@ -14,4 +14,8 @@ router.post(
 
 router.post("/subscription", SubscriptionController.handleSubscription);
 
+router.get("/sheet/:cnpj", SubscriptionController.createSheet);
+
+router.get("/show", SubscriptionController.show);
+
 module.exports = router;

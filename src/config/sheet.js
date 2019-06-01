@@ -189,7 +189,7 @@ class Sheet {
         "sheets",
         `${school.cnpj}-${school.name}.xls`
       );
-      workbook.write(pathToWrite);
+      await workbook.write(pathToWrite);
 
       return pathToWrite;
     } catch (err) {
