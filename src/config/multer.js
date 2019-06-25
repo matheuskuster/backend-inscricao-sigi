@@ -10,7 +10,7 @@ module.exports = {
       cb(null, path.resolve(__dirname, "..", "..", "tmp", "terms"));
     },
     filename: async (req, file, cb) => {
-      const school = await School.findOne({ cnpj: req.params.cnpj });
+      const school = await School.findById(req.params.id);
       const extension = mime_types.extension(file.mimetype);
 
       file.key = `${school.cnpj}-${school.name}.${extension}`;

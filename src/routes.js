@@ -7,7 +7,7 @@ const multerConfig = require("./config/multer");
 router.get("/show/:cnpj", SubscriptionController.showSchool);
 
 router.post(
-  "/term/:cnpj",
+  "/term/:id",
   multer(multerConfig).single("term"),
   SubscriptionController.uploadTerm
 );

@@ -41,9 +41,7 @@ class SubscriptionController {
   }
 
   async uploadTerm(req, res) {
-    const school = await School.findOne({ cnpj: req.params.cnpj }).populate(
-      "teacher"
-    );
+    const school = await School.findById(req.params.id).populate("teacher");
 
     const teacher = school.teacher;
 
@@ -66,6 +64,8 @@ class SubscriptionController {
   }
 
   async handleSubscription(req, res) {
+    let createdSchool;
+
     try {
       const { school, teachers, students } = req.body;
 
@@ -116,14 +116,16 @@ class SubscriptionController {
 
       // Save changes in DATABASE
       await savedSchool.save();
+      createdSchool = savedSchool;
     } catch (err) {
       console.log(err);
       return res.status(500).json({ error: err });
     }
 
-    return res
-      .status(200)
-      .json({ status: "Subscription process was sucessfully" });
+    return res.status(200).json({
+      status: "Subscription proccess was sucessfully",
+      id: createdSchool._id
+    });
   }
 }
 
