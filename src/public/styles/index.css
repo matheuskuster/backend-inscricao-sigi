@@ -1,0 +1,91 @@
+.content ul {
+  list-style: none;
+  margin-top: 60px;
+  width: 50%;
+}
+
+.content ul li {
+  background: #fff;
+  border: 1px solid #cacaca;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+}
+
+.content .total_info {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 50%;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.content .total_info small {
+  font-weight: normal;
+}
+
+.content ul li .name_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.content ul li .name_buttons .name {
+  font-size: 30px;
+  text-transform: uppercase;
+}
+
+.content ul li .name_buttons .name small {
+  font-size: 20px;
+  color: #cacaca;
+  margin-left: 10px;
+}
+
+.content ul li .name_buttons .btn {
+  border: 2px solid #36c1b6;
+  padding: 10px;
+  border-radius: 3px;
+  background: none;
+  margin-left: 5px;
+  color: #36c1b6;
+  font-weight: bold;
+  font-style: none;
+  text-decoration: none;
+}
+
+.content ul li .name_buttons .btn:hover {
+  background: #36c1b6;
+  color: #fff;
+}
+
+.content ul li .name_buttons .spinner {
+  width: 50px;
+  height: 50px;
+  display: none;
+}
+
+.content ul li .info {
+  border-top: 1px solid #cacaca;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.content ul li .info .students_number {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.content ul li .info .students_number input {
+  border: none;
+  font-size: 20px;
+  font-weight: normal;
+  background: none;
+}
+
+.content ul li .info .students_number small {
+  font-weight: normal;
+}

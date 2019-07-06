@@ -3,21 +3,83 @@ const Teacher = require("../models/Teacher");
 const Student = require("../models/Student");
 const Sheet = require("../config/sheet");
 const mailController = require("../config/sendmail");
+const path = require("path");
+const moment = require("moment");
+moment.locale("pt-br");
 
 class SubscriptionController {
   async show(req, res) {
+    console.log("Returning schools");
     const schools = await School.find();
 
     return res.json(schools);
   }
 
   async showSchool(req, res) {
-    const school = await School.findOne({ cnpj: req.params.cnpj }).populate([
+    console.log(req.params.cnpj);
+
+    const schools = await School.find({ cnpj: req.params.cnpj });
+
+    return res.json(schools);
+  }
+
+  async fixSchool(req, res) {
+    const schools = await School.find({ cnpj: req.params.cnpj }).populate([
       "teacher",
       "students"
     ]);
 
-    return res.json(school);
+    if (schools.length >= 2) {
+      console.log(
+        `Found ${schools.length} schools registered with the same CNPJ: ${
+          req.params.cnpj
+        }. Fixing it...`
+      );
+
+      const mainReference = schools[0];
+      const idsToDelete = [];
+      console.log(
+        `Main Reference School: ${mainReference.name} / ${mainReference._id}`
+      );
+
+      schools.shift();
+      schools.map(school => {
+        school.students.map(student => {
+          console.log(`Pushing ${student.name} into main reference...`);
+          mainReference.students.push(student);
+        });
+        console.log("Pushed all students.");
+
+        if (school.teacher.length > mainReference.teacher.length) {
+          console.log(`New teachers array: ${school.teacher}`);
+          mainReference.teacher = school.teacher;
+        }
+
+        idsToDelete.push(school._id);
+      });
+
+      mainReference.studentsNumber = mainReference.students.length;
+      console.log(
+        "Saving MainReference School in database with all the changes..."
+      );
+
+      await mainReference.save();
+      console.log("Saved!");
+
+      idsToDelete.map(async id => {
+        console.log(`Deleting school referenced by _id: ${id}...`);
+        await School.findOneAndDelete({ _id: id });
+        console.log("Deleted!");
+      });
+
+      console.log("All fixed!");
+
+      return res.json(mainReference);
+    }
+
+    return res.status(200).json({
+      status: "Nothing to fix. Only 1 school registered with this CNPJ"
+    });
   }
 
   async createSheet(req, res) {
@@ -126,6 +188,43 @@ class SubscriptionController {
       status: "Subscription proccess was sucessfully",
       id: createdSchool._id
     });
+  }
+
+  async adminIndex(req, res) {
+    const schools = await School.find();
+    var totalStudents = 0;
+    var totalSchools = 0;
+
+    schools.map(s => {
+      totalStudents += s.students.length;
+      totalSchools += 1;
+      s.date = moment(s.createdAt).format("DD/MM/YYYY");
+    });
+
+    return res.render("admin", { schools, totalSchools, totalStudents });
+  }
+
+  async createSheetForAdmin(req, res) {
+    const school = await School.findById(req.params.id).populate([
+      "teacher",
+      "students"
+    ]);
+
+    const sheetPath = await Sheet.createSheet(
+      school,
+      school.teacher,
+      school.students
+    );
+
+    const response = `${school.cnpj}-${school.name}.xls`;
+    return res.json(response);
+  }
+
+  async fileDownload(req, res) {
+    const { file } = req.params;
+
+    const filePath = path.resolve(__dirname, "..", "..", "tmp", "sheets", file);
+    return res.sendFile(filePath);
   }
 }
 

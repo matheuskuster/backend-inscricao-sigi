@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-png" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Abel|Dosis|Montserrat|Open+Sans|Open+Sans+Condensed:300|Rajdhani"
+      rel="stylesheet"
+    />
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+
+    <title>Inscrições SiGI</title>
+  </head>
+
+  <body>
+    <div id="header">
+      <img src="img/white_icon.png" alt="Icone" />
+    </div>
+
+    <div class="content">
+      <h1>GERENCIAMENTO DE INSCRIÇÕES</h1>
+
+      <div class="total_info">
+        <p class="schools">{{ totalSchools }} <small>escolas</small></p>
+        <p class="students">{{ totalStudents }} <small>alunos</small></p>
+      </div>
+
+      <ul>
+        {% for s in schools %}
+
+        <li>
+          <div class="name_buttons">
+            <p class="name">
+              {{ s.name }} <small>{{ s.date }}</small>
+            </p>
+
+            <img
+              id="spinner-{{ s._id }}"
+              class="spinner"
+              src="img/spinner.gif"
+            />
+
+            <button
+              id="{{ s._id }}"
+              href="admin/school/{{ s._id }}"
+              target="_blank"
+              class="btn"
+            >
+              DOWNLOAD
+            </button>
+          </div>
+          <div class="info">
+            <p class="students_number">
+              CNPJ:
+              <input
+                class="cnpj"
+                type="text"
+                value="{{ s.cnpj }}"
+                disabled="disabled"
+              />
+            </p>
+            <p class="students_number">
+              {{ s.studentsNumber }}
+              <small> alunos</small>
+            </p>
+            <p class="students_number">
+              {{ s.teacher.length }}
+              <small> professor(es)</small>
+            </p>
+          </div>
+        </li>
+
+        {% endfor %}
+      </ul>
+    </div>
+
+    <script>
+      var downloadButton = $(".btn");
+      var BASE_URL = "http://localhost:3333";
+
+      downloadButton.click(e => {
+        let id = e.target.id;
+
+        $.ajax({
+          method: "POST",
+          url: BASE_URL + "/admin/sheet/" + id,
+          beforeSend: () => {
+            $("#" + id).hide();
+            $("#spinner-" + id).show();
+          },
+          success: data => {
+            window.open("admin/download/" + data, "_blank");
+
+            $("#" + id).show();
+            $("#spinner-" + id).hide();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

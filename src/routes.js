@@ -18,4 +18,12 @@ router.get("/sheet/:cnpj", SubscriptionController.createSheet);
 
 router.get("/show", SubscriptionController.show);
 
+router.get("/admin", SubscriptionController.adminIndex);
+
+router.post("/admin/sheet/:id", SubscriptionController.createSheetForAdmin);
+
+router.post("/fix/:cnpj", SubscriptionController.fixSchool);
+
+router.get("/admin/download/:file", SubscriptionController.fileDownload);
+
 module.exports = router;

@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: 0;
+  transition: all 0.3s;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+body {
+  background: #fafafa;
+  font-family: "Open Sans Condensed", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  text-rendering: optimizelegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+button {
+  cursor: pointer;
+}
+
+#header {
+  display: flex;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+
+  background: #36c1b6;
+}
+
+#header img {
+  height: 50px;
+  width: 50px;
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.content > h1 {
+  font-size: 50px;
+  font-weight: normal;
+}
