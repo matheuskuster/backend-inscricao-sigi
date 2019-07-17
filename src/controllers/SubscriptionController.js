@@ -126,6 +126,7 @@ class SubscriptionController {
   }
 
   async handleSubscription(req, res) {
+    console.log("OI");
     let createdSchool;
 
     try {
@@ -191,7 +192,7 @@ class SubscriptionController {
   }
 
   async adminIndex(req, res) {
-    const schools = await School.find();
+    const schools = await School.find().sort('createdAt');
     var totalStudents = 0;
     var totalSchools = 0;
 
@@ -225,6 +226,33 @@ class SubscriptionController {
 
     const filePath = path.resolve(__dirname, "..", "..", "tmp", "sheets", file);
     return res.sendFile(filePath);
+  }
+
+  async addStudents(req, res) {
+    const { id } = req.params;
+    const { students } = req.body;
+
+    const school = await School.findById(id);
+
+    console.log(school);
+
+    students.map(async s => {
+      let newStudent = await Student.create({
+        name: s.name,
+        cpf: s.cpf,
+        email: s.email,
+        cellphone: s.cellphone,
+        class: s.year,
+        necessity: s.necessity
+      });
+
+      school.students.push(newStudent);
+    });
+
+    school.studentsNumber = school.students.length;
+    await school.save();
+
+    return res.json(school);
   }
 }
 
