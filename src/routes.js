@@ -12,7 +12,7 @@ router.get("/show/:cnpj", SubscriptionController.showSchool);
 //   SubscriptionController.uploadTerm
 // );
 
-router.post("/subscription", SubscriptionController.handleSubscription);
+// router.post("/subscription", SubscriptionController.handleSubscription);
 
 // router.get("/sheet/:cnpj", SubscriptionController.createSheet);
 
