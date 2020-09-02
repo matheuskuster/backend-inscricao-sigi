@@ -13,7 +13,7 @@
     "excel4node": "^1.7.1",
     "express": "^4.16.4",
     "fs": "^0.0.1-security",
-    "googleapis": "27",
+    "googleapis": "39",
     "handlebars": "^4.1.2",
     "mime-type": "^3.0.7",
     "mime-types": "^2.1.22",
