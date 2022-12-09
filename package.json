@@ -11,7 +11,7 @@
     "cors": "^2.8.5",
     "dateformat": "^3.0.3",
     "excel4node": "^1.7.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "fs": "^0.0.1-security",
     "googleapis": "27",
     "handlebars": "^4.1.2",
